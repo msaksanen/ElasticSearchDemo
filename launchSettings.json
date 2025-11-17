@@ -1,0 +1,26 @@
+//{
+//  "profiles": {
+//    "Docker Compose": {
+//      "commandName": "DockerCompose",
+//      "commandVersion": "1.0",
+//      "serviceActions": {
+//        "elasticsearch": "StartDebugging"
+//      }
+//    }
+//  }
+//}
+
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "elasticapi",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger/index.html",
+      "serviceActions": {
+        "elasticapi": "StartDebugging"
+      }
+    }
+  }
+}
