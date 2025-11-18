@@ -9,6 +9,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ElasticsSearchSettings__Url=http://elasticsearch:9200/
     ports:
      - ${EXPOSE_HTTP_CONTAINER_PORT}:80
      - ${EXPOSE_HTTPS_CONTAINER_PORT}:443
@@ -39,7 +40,7 @@ services:
     depends_on:
       - elasticsearch
     environment:
-      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTICSEARCH_URL=http://elasticsearch:9200/
     networks:
       - elk
 

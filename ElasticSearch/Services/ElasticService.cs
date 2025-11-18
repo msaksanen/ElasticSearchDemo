@@ -39,14 +39,14 @@ namespace ElasticSearch.Services
 
             return response.IsValidResponse;
         }
-
+     
         public async Task CreateIndexIfNotExistsAsync(string indexName)
         {
             var result = await _client.Indices.ExistsAsync(indexName);
 
-            if (result.Exists)
+            if (!result.Exists)
             {
-               var y =  await _client.Indices.CreateAsync(indexName);
+               await _client.Indices.CreateAsync(indexName);
             }
         }
 
@@ -80,5 +80,6 @@ namespace ElasticSearch.Services
 
             return response.IsValidResponse ? response.Deleted : default;
         }
+
     }
 }

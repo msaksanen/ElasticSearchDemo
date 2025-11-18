@@ -2,6 +2,7 @@
 using ElasticSearch.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using System.Reflection.Metadata.Ecma335;
 
 namespace ElasticSearch.Controllers
@@ -10,12 +11,10 @@ namespace ElasticSearch.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly ILogger<UserController> _logger;
         private readonly IElasticService<User> _elasticService;
 
-        public UserController(ILogger<UserController> logger, IElasticService<User> elasticService)
+        public UserController(IElasticService<User> elasticService)
         {
-            _logger = logger;
             _elasticService = elasticService;
         }
 
@@ -53,6 +52,7 @@ namespace ElasticSearch.Controllers
         [HttpGet("get-all-user")]
         public async Task<IActionResult> GetAllUser(string indexName)
         {
+            Log.Information("Custom Log GetAllUser");
             var users = await _elasticService.GetAll(indexName);
             return users != null ? Ok(users) : StatusCode(500, "Error reterving the users");
         }
