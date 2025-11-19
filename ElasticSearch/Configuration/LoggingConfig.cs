@@ -7,15 +7,10 @@ namespace ElasticSearch.Configuration
 {
     internal static class LoggingConfig
     {
-        internal static void ConfigureLogging(string? url)
+        internal static void ConfigureLogging(IConfiguration configuration)
         {
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile(
-                    $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
-                    optional: true)
-                .Build();
+            var _elasticURL = configuration["ElasticsSearchSettings:Url"];
 
             Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
@@ -23,7 +18,7 @@ namespace ElasticSearch.Configuration
             .Enrich.WithMachineName()
             .WriteTo.Debug()
             .WriteTo.Console()
-            .WriteTo.Elasticsearch(ConfigureElasticSink(url, environment))
+            .WriteTo.Elasticsearch(ConfigureElasticSink(_elasticURL, environment))
             .Enrich.WithProperty("Environment", environment)
             .ReadFrom.Configuration(configuration)
             .CreateLogger();

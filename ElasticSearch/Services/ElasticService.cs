@@ -1,7 +1,10 @@
 ﻿using Elastic.Clients.Elasticsearch;
+using Elastic.Clients.Elasticsearch.Nodes;
 using ElasticSearch.Configuration;
 using ElasticSearch.Models;
 using Microsoft.Extensions.Options;
+using System.Linq;
+using System.Reflection;
 
 namespace ElasticSearch.Services
 {
@@ -10,15 +13,10 @@ namespace ElasticSearch.Services
         private readonly ElasticsearchClient _client;
         private readonly ElasticSettings _elasticSettings;
 
-        public ElasticService(IOptions<ElasticSettings> elasticSettings)
+        public ElasticService(IOptions<ElasticSettings> elasticSettings, ElasticsearchClient client)
         {
             _elasticSettings = elasticSettings.Value;
-
-            var settings = new ElasticsearchClientSettings(new Uri(_elasticSettings.Url))
-                //.Authentication()
-                .DefaultIndex(_elasticSettings.DefaultIndex);
-
-            _client = new ElasticsearchClient(settings);
+            _client = client;
         }
 
         public async Task<bool> AddOrUpdate(T entity, string? index)

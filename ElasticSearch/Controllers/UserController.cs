@@ -1,9 +1,7 @@
 ﻿using ElasticSearch.Models;
 using ElasticSearch.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ElasticSearch.Controllers
 {

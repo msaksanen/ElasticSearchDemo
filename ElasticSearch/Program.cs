@@ -1,30 +1,38 @@
+using Elastic.Clients.Elasticsearch;
 using ElasticSearch.Configuration;
 using ElasticSearch.Services;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 
 
 namespace ElasticSearch
 {
-    public class Program
+    public class Program()
     {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            builder.Services.Configure<ElasticSettings>(builder.Configuration.GetSection("ElasticsSearchSettings"));
-            var _elasticURL = builder.Configuration["ElasticsSearchSettings:Url"];
-            LoggingConfig.ConfigureLogging(_elasticURL);
+            
+            var configuration = builder.Configuration;
+            LoggingConfig.ConfigureLogging(configuration);
             builder.Host.UseSerilog(Log.Logger);
+
+            ElasticSettings elasticSettings = configuration.GetSection("ElasticsSearchSettings").Get<ElasticSettings>() ?? throw new Exception("ElasticsSearchSettings configuration not found");
+
+            var settings = new ElasticsearchClientSettings(new Uri(elasticSettings.Url))
+                           //.Authentication()
+                           .DefaultIndex(elasticSettings.DefaultIndex);
 
             // Add services to the container.
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-          
-            builder.Services.AddSingleton(typeof(IElasticService<>), typeof(ElasticService<>));
 
+            builder.Services.AddSingleton(new ElasticsearchClient(settings));
+            builder.Services.AddScoped(typeof(IElasticService<>), typeof(ElasticService<>));
+            builder.Services.AddScoped<IProductService, ProductService>();
 
             var app = builder.Build();
 
