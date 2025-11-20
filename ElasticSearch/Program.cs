@@ -1,3 +1,4 @@
+using Elastic.Apm.NetCoreAll;
 using Elastic.Clients.Elasticsearch;
 using ElasticSearch.Configuration;
 using ElasticSearch.Handlers;
@@ -36,8 +37,10 @@ namespace ElasticSearch
             builder.Services.AddSingleton(new ElasticsearchClient(settings));
             builder.Services.AddScoped(typeof(IElasticService<>), typeof(ElasticService<>));
             builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddAllElasticApm();
 
             var app = builder.Build();
+           //app.UseAllElasticApm(builder.Configuration);
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
