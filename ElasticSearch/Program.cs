@@ -1,5 +1,6 @@
 using Elastic.Clients.Elasticsearch;
 using ElasticSearch.Configuration;
+using ElasticSearch.Handlers;
 using ElasticSearch.Services;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -25,6 +26,8 @@ namespace ElasticSearch
                            .DefaultIndex(elasticSettings.DefaultIndex);
 
             // Add services to the container.
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -43,6 +46,7 @@ namespace ElasticSearch
                 app.UseSwaggerUI();
             }
 
+            app.UseExceptionHandler();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

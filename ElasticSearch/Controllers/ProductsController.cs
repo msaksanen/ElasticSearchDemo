@@ -1,7 +1,7 @@
 ﻿using ElasticSearch.Models;
 using ElasticSearch.Services;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
+
 namespace ElasticSearch.Controllers
 {
 
@@ -11,12 +11,15 @@ namespace ElasticSearch.Controllers
     {
         private readonly IProductService _productService;
         private readonly IElasticService<Product> _elasticService;
+        private readonly ILogger<ProductsController> _logger;
 
 
-        public ProductsController(IProductService productService, IElasticService<Product> elasticService)
+        public ProductsController(IProductService productService, IElasticService<Product> elasticService,
+                                  ILogger<ProductsController> logger)
         {
             _productService = productService;
-            _elasticService = elasticService;   
+            _elasticService = elasticService;
+            _logger = logger;
         }
 
         [HttpPost("init")]
@@ -73,7 +76,6 @@ namespace ElasticSearch.Controllers
         [HttpGet("get-all-products")]
         public async Task<IActionResult> GetAllProducts(string indexName)
         {
-            Log.Information("Custom Log GetAllUser");
             var users = await _elasticService.GetAll(indexName);
             return users != null ? Ok(users) : StatusCode(500, "Error reterving the products");
         }

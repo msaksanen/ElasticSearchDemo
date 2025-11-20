@@ -42,35 +42,6 @@ namespace ElasticSearch.Services
 
         public async Task<IEnumerable<Product>> SearchAsync(string query)
         {
-            //var response = await _client.SearchAsync<Product>(s => s
-            //    .Index(IndexName)
-            //    .Query(q => q
-            //        .MultiMatch(m => m
-            //            .Fields(f => f
-            //                .Field(p => p.Title, boost: 2.0) // Приоритет заголовка выше
-            //                .Field(p => p.Description)
-            //            )
-            //            .Query(query)
-            //            .Fuzziness(new Fuzziness("AUTO")) // Нечеткий поиск
-            //            .Operator(Operator.Or)
-            //        )
-            //    )
-            //);
-
-
-            //var response1 = await _client.SearchAsync<Product>(s => s
-            //                                    .Index(IndexName)
-            //                                    .Size(10)
-            //                                    .Query(q => q
-            //                                        .MultiMatch( mm => mm
-            //                                          .Query(query)
-            //                                          .Fields("Title, Description")
-            //                                          .Fuzziness(new Fuzziness("AUTO"))
-            //                                          .Operator(Operator.Or)
-            //                                          )
-            //                                    )
-            //                                );
-
             var response = await _client.SearchAsync<Product>(s => s
                         .Index("products")
                         .Query(q => q
